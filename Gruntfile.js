@@ -28,10 +28,6 @@ module.exports = function (grunt) {
     'copy:build'
   ]);
 
-  grunt.registerTask('test', [
-    'jshint',
-  ]);
-
   grunt.registerTask('package', [
     'clean:package',
     'concat:package',

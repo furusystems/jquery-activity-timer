@@ -1,6 +1,6 @@
 {
   "name": "jquery-activity-timer",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "jQuery idleTimer Plugin",
   "main": "src/jquery.idle-timer.js",
   "keywords": [

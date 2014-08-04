@@ -4,7 +4,9 @@ module.exports = function (grunt) {
   "use strict";
 
   // Load plugins.
+  grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -28,8 +30,6 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test', [
     'jshint',
-    'clean:test',
-    'copy:test'
   ]);
 
   grunt.registerTask('package', [
@@ -51,7 +51,7 @@ module.exports = function (grunt) {
     env: grunt.option('env') || 'dev',
 
     properties: {
-      name: 'jquery-activity-timer',
+      name: 'jquery.activity-timer',
       source_dir: 'src',
       build_dir: 'build',
       test_dir: 'test',
@@ -98,6 +98,46 @@ module.exports = function (grunt) {
         timout: 30000,
       },
       files: ['test/**/*.html']
+    },
+
+    concat: {
+      options: {
+        stripBanners: true
+      },
+      package: {
+        src: ["<%= properties.build_dir %>/js/<%= properties.name %>.js"],
+        dest: "<%= properties.package_dir %>/<%= properties.name %>.js"
+      }
+    },
+
+    uglify: {
+      package: {
+        files: {
+          '<%= properties.package_dir %>/<%= properties.name %>.min.js': [
+            '<%= properties.package_dir %>/<%= properties.name %>.js'
+          ]
+        },
+        options: {
+          beautify: {
+            "ascii_only": true
+          },
+          banner:
+            "/*! jQuery Activity Timer plugin <%= pkg.version %> */\n",
+          compress: {
+            "hoist_funs": false,
+            loops: false,
+            unused: false
+          }
+        }
+      }
+    },
+
+    bump: {
+      options: {
+        files: ['bower.json', 'package.json'],
+        commitFiles: ['bower.json', 'package.json'],
+        pushTo: 'origin'
+      }
     },
 
     connect: {

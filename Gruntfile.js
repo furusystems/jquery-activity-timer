@@ -3,18 +3,20 @@
 module.exports = function (grunt) {
   "use strict";
 
+  // Load plugins.
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-open');
 
-
+  // Register tasks
   grunt.registerTask('default', [
     'build',
-    'test',
+    'qunit',
     'package'
   ]);
 
@@ -24,15 +26,11 @@ module.exports = function (grunt) {
     'copy:build'
   ]);
 
-  // grunt.registerTask('test', [
-  //   'karma:browser_unit'
-  // ]);
-  grunt.registerTask('test:dev', [
-    // 'karma:headless_unit'
+  grunt.registerTask('test', [
+    'jshint',
+    'clean:test',
+    'copy:test'
   ]);
-  // grunt.registerTask('test:debug', [
-  //   'karma:browser_unit_debug'
-  // ]);
 
   grunt.registerTask('package', [
     'clean:package',
@@ -47,6 +45,7 @@ module.exports = function (grunt) {
     'watch:dev'
   ]);
 
+  // Configure
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     env: grunt.option('env') || 'dev',
@@ -55,17 +54,21 @@ module.exports = function (grunt) {
       name: 'jquery-activity-timer',
       source_dir: 'src',
       build_dir: 'build',
+      test_dir: 'test',
       package_dir: 'dist'
     },
 
     clean: {
       build: '<%= properties.build_dir %>',
-      package: '<%= properties.package_dir %>'
+      package: '<%= properties.package_dir %>',
     },
 
     jshint: {
       source: [
         '<%= properties.source_dir %>'
+      ],
+      test: [
+        '<%= properties.test_dir %>'
       ],
       options: {
         jshintrc: '.jshintrc'
@@ -90,6 +93,13 @@ module.exports = function (grunt) {
       }
     },
 
+    qunit: {
+      options: {
+        timout: 30000,
+      },
+      files: ['test/**/*.html']
+    },
+
     connect: {
       options: {
         hostname: '*'
@@ -111,7 +121,7 @@ module.exports = function (grunt) {
     watch: {
       dev: {
         files: ['<%= properties.source_dir %>/**/*'],
-        tasks: ['build', 'test:dev'],
+        tasks: ['build', 'qunit'],
         options: {
           livereload: true
         }

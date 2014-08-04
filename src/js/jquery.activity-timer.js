@@ -1,7 +1,8 @@
 /* global console, define, require, jQuery, window */
-// TODO: tests
-// TODO: Travis + Karma
+// TODO: Package + Banner
 // TODO: License's
+// TODO: Update README
+// TODO: Travis
 (function (factory) {
 	if (typeof define === 'function' && define.amd) {
 		// AMD
@@ -34,6 +35,7 @@
 		this._time = 0;
 
 		this.delay = delay;
+		this.idle = false;
 		this.running = false;
 		this.paused = false;
 
@@ -114,7 +116,7 @@
 		onUserEvent: function (event) {
 			if (this.idle) {
 				this.idle = false;
-				$(this._element).trigger("activityTimer.active");
+				$(this._element).trigger("activityTimer.active", this);
 			}
 			this._time = time();
 		},
@@ -123,17 +125,19 @@
 			if (!this.idle && (this.getElapsedTime() >= this.delay)) {
 				this.idle = true;
 				this._time = 0;
-				$(this._element).trigger("activityTimer.idle");
+				$(this._element).trigger("activityTimer.idle", this);
 			}
 		}
 	});
 
-  $.fn.activity = function (options) {
-		var activityTimer;
+  $.fn.activity = function () {
+		var activityTimer,
+				args = Array.prototype.slice.call(arguments, 0),
+				options = {};
 
 		// destroy idle timer's
-		if (($.type(options) === "string") &&
-				(options === "destroy")) {
+		if (($.type(args[0]) === "string") &&
+				(args[0] === "destroy")) {
 			$.each(this, function (index, element) {
 					activityTimer = $(element).data("activityTimer");
 					if (activityTimer) {
@@ -142,6 +146,20 @@
 				});
 
 			return this;
+		}
+
+		// first arg is a number
+		if ($.type(args[0]) === "number") {
+			options = {delay: args[0]};
+		}
+		// first arg is an options object
+		else if ($.type(args[0]) === "object") {
+			options = args[0];
+		}
+
+		// we have a options object
+		if (args.length > 1 && ($.type(args[1]) === "object")) {
+			options = $.extend(options, args[1]);
 		}
 
 		// setup or re-create idle timer's

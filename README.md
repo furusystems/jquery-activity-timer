@@ -9,6 +9,6 @@ Idle Timer
 
 TODOS:
 
-* Banner Licenses?
+* Better Banners
 * Update README
 * Travis

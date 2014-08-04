@@ -52,7 +52,7 @@ module.exports = function (grunt) {
     env: grunt.option('env') || 'dev',
 
     properties: {
-      name: 'jquery-idle-timer',
+      name: 'jquery-activity-timer',
       source_dir: 'src',
       build_dir: 'build',
       package_dir: 'dist'

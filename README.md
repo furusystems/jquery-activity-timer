@@ -1,4 +1,4 @@
-jquery-idle-timer
+jquery-activity-timer
 =================
 
 Idle Timer

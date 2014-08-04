@@ -3,25 +3,97 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>jQuery idle timer | Demo</title>
+        <title>jQuery acivity timer | Demo</title>
+        <style>
+          body {
+            background-color: #fff;
+            text-align: center;
+            position: relative;
+          }
 
+          .box {
+            background-color: #f4f3f1;
+            height: 24em;
+            width: 33%;
+            display:-webkit-box;
+            display:-webkit-flex;
+            display:-moz-box;
+            display:-ms-flexbox;
+            display:flex;
+            -webkit-box-align:center;
+            -webkit-align-items:center;
+            -moz-box-align:center;
+            -ms-flex-align:center;
+            align-items:center;
+            -webkit-box-pack:center;
+            -webkit-justify-content:center;
+            -moz-box-pack:center;
+            -ms-flex-pack:center;
+            justify-content:center;
+            margin: 8em auto;
+          }
+
+          body h2,
+          .box h4 {
+            color: green;
+          }
+
+          body.idle h2,
+          .box.idle h4 {
+            color: gray;
+          }
+
+        </style>
     </head>
     <body>
-      <p>Demo</p>
-
+      <h1>Activity Timer :: Demo</h1>
+<h2>Document :: <span>active</span></h2>
+<pre>
+// toggle timer on document
+$.activity({delay: 5000});
+</pre>
+      <div class="box">
+        <div class="item">
+          <h4>Item :: <span>active</span></h4>
+          <pre>
+  // toggle timer on element selector
+  $('.item').activity({delay: 2500});
+          </pre>
+        </div>
+      </div>
 
       <script src="../bower_components/jquery/dist/jquery.js"></script>
-      <script src="js/jquery.idle-timer.js"></script>
+      <script src="js/jquery.activity-timer.js"></script>
       <script>
-        $.idleTimer({delay: 1000});
-        $(document).on("idleTimer.active", function () {
-          console.log("active");
-          $('p').css('color', 'red');
+        $.activity({delay: 5000});
+        $(document).on("activityTimer.active", function (event) {
+          $('body').removeClass('idle');
+          $('h2 span').html('active');
         });
 
-        $(document).on("idleTimer.idle", function () {
-          console.log("inactive");
-          $('p').css('color', 'gray');
+        $(document).on("activityTimer.idle", function (event) {
+          $('body').addClass('idle');
+          $('h2 span').html('idle');
+        });
+
+        $('.box').activity({delay: 2500});
+        $('.box').on("activityTimer.active", function (event) {
+          // prevent propagation to document, body and parents
+          if (event) {
+            event.stopPropagation();
+          }
+          $('.box').removeClass('idle');
+          $('.box h4 span').html('active');
+        });
+
+        $('.box').on("activityTimer.idle", function (event) {
+          // prevent propagation to document, body and parents
+          if (event) {
+            event.stopPropagation();
+          }
+          $('.box').addClass('idle');
+          $('.box h4 span').html('idle');
+
         });
       </script>
     </body>

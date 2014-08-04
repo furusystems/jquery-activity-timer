@@ -1,15 +1,12 @@
 /* global console, define, require, jQuery, window */
-// TODO: handle mouse move
-// TODO: tune demo page
+// TODO: tune demo for pause, remainingTime, elapsedTime
 // TODO: tests
 (function (factory) {
 	if (typeof define === 'function' && define.amd) {
 		// AMD
 		define(['jquery'], factory);
-	} else if (typeof exports === 'object') {
-		// CommonJS
-		factory(require('jquery'));
-	} else {
+	}
+	else {
 		// Browser globals
 		factory(jQuery);
 	}
@@ -21,12 +18,14 @@
 	var defaultOptions = {
 		startImmediately: true, //starts a timeout as soon as the timer is set up
 		delay: 5000,  //the amount of time (ms) before the user is considered idle
-		events: 'mousemove keydown DOMMouseScroll mousewheel' +
-						'mousedown touchstart touchmove' +
+		events: 'keydown DOMMouseScroll mousewheel ' +
+						'mousemove mousedown touchstart touchmove ' +
 						'MSPointerDown MSPointerMove' // activity is one of these events
 	};
 
-	function IdleTimer (element, delay, events) {
+	var INTERVAL_DELAY = 1000 / 60;
+
+	function ActivityTimer(element, delay, events) {
 		this.element = element;
 		this.delay = delay;
 		this.events = events;
@@ -36,14 +35,14 @@
 
 		this.callbacks = {
 			onUserEvent: $.proxy(this.onUserEvent, this),
-			onTimeout: $.proxy(this.onTimeout, this)
+			onInterval: $.proxy(this.onInterval, this)
 		};
 
 		$(this.element).on(this.events, this.callbacks.onUserEvent);
-		$(this.element).data("idleTimer", this);
+		$(this.element).data("activityTimer", this);
 	}
 
-	$.extend(IdleTimer.prototype, {
+	$.extend(ActivityTimer.prototype, {
 
 		getElapsedTime: function () {
 			return (this.time > 0 ? (time() - this.time) : 0);
@@ -54,7 +53,7 @@
 		},
 
 		destroy: function () {
-			$(this.element).data("idleTimer", null);
+			$(this.element).data("activityTimer", null);
 			this.stop();
 			$(this.element).off(this.events, this.callbacks.onUserEvent);
 			this.element = null;
@@ -65,14 +64,15 @@
 				return;
 			}
 			this.running = true;
-			if (this.paused) {
-				this.paused = false;
-				setTimeout(this.callbacks.onTimeout, this.remainingTime);
-			}
-			else {
-				setTimeout(this.callbacks.onTimeout, this.delay);
-			}
+
 			this.time = time();
+			if (this.paused) {
+				this.time -= this.remainingTime;
+				this.paused = false;
+			}
+
+			this.intervalID = window.setInterval(this.callbacks.onInterval,
+				INTERVAL_DELAY);
 		},
 
 		pause: function () {
@@ -83,9 +83,9 @@
 			this.paused = true;
 			this.remainingTime = this.getRemainingTime();
 
-			if (this.timeoutID) {
-				clearTimeout(this.timeoutID);
-				this.timeoutID = null;
+			if (this.intervalID) {
+				window.clearInterval(this.intervalID);
+				this.intervalID = null;
 			}
 		},
 
@@ -96,80 +96,61 @@
 			this.running = false;
 			this.time = 0;
 
-			if (this.timeoutID) {
-				clearTimeout(this.timeoutID);
-				this.timeoutID = null;
+			if (this.intervalID) {
+				window.clearInterval(this.intervalID);
+				this.intervalID = null;
 			}
 		},
 
 		onUserEvent: function (event) {
-			if (this.timeoutID) {
-				clearTimeout(this.timeoutID);
-				this.timeoutID = null;
-			}
-
 			if (this.idle) {
 				this.idle = false;
-
-				$(this.element)
-					.trigger("idleTimer.active");
+				$(this.element).trigger("activityTimer.active");
 			}
-
-			if (this.running) {
-				this.timeoutID =
-					setTimeout(this.callbacks.onTimeout, this.delay);
-				this.time = time();
-			}
+			this.time = time();
 		},
 
-		onTimeout: function () {
-			if (!this.idle) {
+		onInterval: function () {
+			if (!this.idle && (this.getElapsedTime() >= this.delay)) {
 				this.idle = true;
-				$(this.element)
-					.trigger("idleTimer.idle");
+				$(this.element).trigger("activityTimer.idle");
 			}
-
-			this.timeoutID =
-				setTimeout(this.callbacks.onTimeout, this.delay);
-			this.time = time();
 		}
 	});
 
-  $.fn.idleTimer = function (options) {
-		var idleTimer;
+  $.fn.activity = function (options) {
+		var activityTimer;
 
 		// destroy idle timer's
 		if (($.type(options) === "string") &&
 				(options === "destroy")) {
+			$.each(this, function (index, element) {
+					activityTimer = $(element).data("activityTimer");
+					if (activityTimer) {
+						activityTimer.destroy();
+					}
+				});
 
-					$.each(this, function (index, element) {
-							idleTimer = $(element).data("idleTimer");
-							if (idleTimer) {
-								idleTimer.destroy();
-							}
-					});
-
-					return this;
-				}
+			return this;
+		}
 
 		// setup or re-create idle timer's
 		options = $.extend(defaultOptions, options);
 		$.each(this, function (index, element) {
-			idleTimer = $(element).data("idleTimer");
-			if (idleTimer) {
-				idleTimer.destroy();
+			activityTimer = $(element).data("activityTimer");
+			if (activityTimer) {
+				activityTimer.destroy();
 			}
-
-			idleTimer = new IdleTimer(element, options.delay, options.events);
+			activityTimer = new ActivityTimer(element, options.delay, options.events);
 			if (options.startImmediately) {
-				idleTimer.start();
+				activityTimer.start();
 			}
 		});
 
 		return this;
   };
 
-	$.idleTimer = function () {
-		$.fn.idleTimer.apply([document], arguments);
+	$.activity = function () {
+		$.fn.activity.apply([document], arguments);
 	};
 }));

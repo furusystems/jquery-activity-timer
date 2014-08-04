@@ -1,9 +1,9 @@
 {
-  "name": "jquery-idle-timer",
-  "version": "0.0.1",
+  "name": "jquery-activity-timer",
+  "version": "0.0.2",
   "repository": {
     "type": "git",
-    "url": "https://github.com/furusystems/jquery-idle-timer"
+    "url": "https://github.com/furusystems/jquery-activity-timer"
   },
   "dependencies": {},
   "devDependencies": {

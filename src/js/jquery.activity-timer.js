@@ -1,6 +1,6 @@
 /* global console, define, require, jQuery, window */
-// TODO: tune demo for pause, remainingTime, elapsedTime
 // TODO: tests
+// TODO: Travis + Karma
 (function (factory) {
 	if (typeof define === 'function' && define.amd) {
 		// AMD
@@ -23,19 +23,21 @@
 						'MSPointerDown MSPointerMove' // activity is one of these events
 	};
 
-	var INTERVAL_DELAY = 1000 / 60;
+	var ACTIVITY_TIMER_DELAY = 1000 / 60;
 
 	function ActivityTimer(element, delay, events) {
 		this.element = element;
 		this.delay = delay;
 		this.events = events;
 		this.time = 0;
+		this.elapsedTime = 0;
+		this.remainingTime = 0;
 		this.running = false;
 		this.paused = false;
 
 		this.callbacks = {
 			onUserEvent: $.proxy(this.onUserEvent, this),
-			onInterval: $.proxy(this.onInterval, this)
+			onTimer: $.proxy(this.onTimer, this)
 		};
 
 		$(this.element).on(this.events, this.callbacks.onUserEvent);
@@ -45,6 +47,10 @@
 	$.extend(ActivityTimer.prototype, {
 
 		getElapsedTime: function () {
+			if (this.paused) {
+				return this.elapsedTime;
+			}
+
 			return (this.time > 0 ? (time() - this.time) : 0);
 		},
 
@@ -67,12 +73,12 @@
 
 			this.time = time();
 			if (this.paused) {
-				this.time -= this.remainingTime;
+				this.time -= this.elapsedTime;
 				this.paused = false;
 			}
 
-			this.intervalID = window.setInterval(this.callbacks.onInterval,
-				INTERVAL_DELAY);
+			this.timerID = window.setInterval(this.callbacks.onTimer,
+				ACTIVITY_TIMER_DELAY);
 		},
 
 		pause: function () {
@@ -80,12 +86,12 @@
 				return;
 			}
 			this.running = false;
-			this.paused = true;
-			this.remainingTime = this.getRemainingTime();
+			this.elapsedTime = this.getElapsedTime();
 
-			if (this.intervalID) {
-				window.clearInterval(this.intervalID);
-				this.intervalID = null;
+			this.paused = true;
+			if (this.timerID) {
+				window.clearInterval(this.timerID);
+				this.timerID = null;
 			}
 		},
 
@@ -96,9 +102,9 @@
 			this.running = false;
 			this.time = 0;
 
-			if (this.intervalID) {
-				window.clearInterval(this.intervalID);
-				this.intervalID = null;
+			if (this.timerID) {
+				window.clearInterval(this.timerID);
+				this.timerID = null;
 			}
 		},
 
@@ -110,9 +116,10 @@
 			this.time = time();
 		},
 
-		onInterval: function () {
+		onTimer: function () {
 			if (!this.idle && (this.getElapsedTime() >= this.delay)) {
 				this.idle = true;
+				this.time = 0;
 				$(this.element).trigger("activityTimer.idle");
 			}
 		}
@@ -153,4 +160,6 @@
 	$.activity = function () {
 		$.fn.activity.apply([document], arguments);
 	};
+
+	return $.fn.activity;
 }));

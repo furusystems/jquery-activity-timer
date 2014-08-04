@@ -11,10 +11,15 @@
             position: relative;
           }
 
+          body > div {
+            width: 33%;
+            margin: 2em auto;
+            text-align: left;
+          }
+
           .box {
             background-color: #f4f3f1;
             height: 24em;
-            width: 33%;
             display:-webkit-box;
             display:-webkit-flex;
             display:-moz-box;
@@ -30,7 +35,6 @@
             -moz-box-pack:center;
             -ms-flex-pack:center;
             justify-content:center;
-            margin: 8em auto;
           }
 
           body h2,
@@ -43,23 +47,60 @@
             color: gray;
           }
 
+          ul li .title {
+            text-align: left;
+            display: inline-block;
+            min-width: 120px;
+          }
         </style>
     </head>
     <body>
       <h1>Activity Timer :: Demo</h1>
-<h2>Document :: <span>active</span></h2>
-<pre>
-// toggle timer on document
-$.activity({delay: 5000});
-</pre>
-      <div class="box">
-        <div class="item">
-          <h4>Item :: <span>active</span></h4>
+      <div>
+        <div style="width: 50%; float: left;">
+          <h2>Document :: <span>active</span></h2>
           <pre>
-  // toggle timer on element selector
-  $('.item').activity({delay: 2500});
+  // toggle timer on document
+  $.activity({delay: 5000});
           </pre>
         </div>
+
+        <div class="document-info" style="width: 50%; float: left;">
+          <ul>
+            <li class="paused"><span class="title">Paused:</span> <span class="value"></span></li>
+            <li class="delay"><span class="title">Delay:</span> <span class="value"></span></li>
+            <li class="elapsed"><span class="title">Elapsed Time:</span> <span class="value"></span></li>
+            <li class="remaining"><span class="title">Remaining Time:</span> <span class="value"></span></li>
+          </ul>
+          <button class="toggle" style="margin-left: 2em;">Pause</button>
+
+        </div>
+        <br style="clear: both" />
+      </div>
+
+      <div class="box">
+        <div>
+          <h4>Box :: <span>active</span></h4>
+          <div>
+            <pre>
+// toggle timer
+// on element selector
+$('.box')
+  .activity({delay: 2500});
+            </pre>
+          </div>
+          <div class="info">
+            <ul>
+              <li class="paused"><span class="title">Paused:</span> <span class="value"></span></li>
+              <li class="delay"><span class="title">Delay:</span> <span class="value"></span></li>
+              <li class="elapsed"><span class="title">Elapsed Time:</span> <span class="value"></span></li>
+              <li class="remaining"><span class="title">Remaining Time:</span> <span class="value"></span></li>
+            </ul>
+            <button class="toggle" style="margin-left: 2em;">Pause</button>
+
+          </div>
+        </div>
+        <br style="clear: both" />
       </div>
 
       <script src="../bower_components/jquery/dist/jquery.js"></script>
@@ -95,6 +136,47 @@ $.activity({delay: 5000});
           $('.box h4 span').html('idle');
 
         });
+      </script>
+
+      <script>
+        var activityTimer = $(document).data("activityTimer");
+        window.setInterval(function () {
+          $('.document-info li.paused .value').html(activityTimer.paused ? 'YES': 'NO');
+          $('.document-info li.delay .value').html(String(activityTimer.delay));
+          $('.document-info li.elapsed .value').html(String(activityTimer.getElapsedTime()));
+          $('.document-info li.remaining .value').html(String(activityTimer.getRemainingTime()));
+        }, 100);
+
+        $('.document-info button.toggle').on('click', function () {
+          if (activityTimer.paused) {
+            activityTimer.start();
+            $(this).html('Pause');
+          }
+          else {
+            activityTimer.pause();
+            $(this).html('Start');
+          }
+        });
+
+        var boxActivityTimer = $('.box').data("activityTimer");
+        window.setInterval(function () {
+          $('.box .info li.paused .value').html(boxActivityTimer.paused ? 'YES': 'NO');
+          $('.box .info li.delay .value').html(String(boxActivityTimer.delay));
+          $('.box .info li.elapsed .value').html(String(boxActivityTimer.getElapsedTime()));
+          $('.box .info li.remaining .value').html(String(boxActivityTimer.getRemainingTime()));
+        }, 100);
+
+        $('.box .info button.toggle').on('click', function () {
+          if (boxActivityTimer.paused) {
+            boxActivityTimer.start();
+            $(this).html('Pause');
+          }
+          else {
+            boxActivityTimer.pause();
+            $(this).html('Start');
+          }
+        });
+
       </script>
     </body>
 </html>

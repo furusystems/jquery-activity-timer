@@ -11,4 +11,3 @@ TODOS:
 
 * Better Banners
 * Update README
-* Travis

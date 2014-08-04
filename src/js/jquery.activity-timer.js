@@ -1,6 +1,7 @@
 /* global console, define, require, jQuery, window */
 // TODO: tests
 // TODO: Travis + Karma
+// TODO: License's
 (function (factory) {
 	if (typeof define === 'function' && define.amd) {
 		// AMD
@@ -26,12 +27,13 @@
 	var ACTIVITY_TIMER_DELAY = 1000 / 60;
 
 	function ActivityTimer(element, delay, events) {
-		this.element = element;
+		this._element = element;
+		this._events = events;
+		this._elapsedTime = 0;
+		this._remainingTime = 0;
+		this._time = 0;
+
 		this.delay = delay;
-		this.events = events;
-		this.time = 0;
-		this.elapsedTime = 0;
-		this.remainingTime = 0;
 		this.running = false;
 		this.paused = false;
 
@@ -40,29 +42,30 @@
 			onTimer: $.proxy(this.onTimer, this)
 		};
 
-		$(this.element).on(this.events, this.callbacks.onUserEvent);
-		$(this.element).data("activityTimer", this);
+		$(this._element).on(this._events, this.callbacks.onUserEvent);
+		$(this._element).data("activityTimer", this);
 	}
 
 	$.extend(ActivityTimer.prototype, {
 
 		getElapsedTime: function () {
 			if (this.paused) {
-				return this.elapsedTime;
+				return this._elapsedTime;
 			}
 
-			return (this.time > 0 ? (time() - this.time) : 0);
+			return (this._time > 0 ? (time() - this._time) : 0);
 		},
 
 		getRemainingTime: function () {
-			return (this.time > 0 ? (this.delay - this.getElapsedTime()) : 0);
+			return (this._time > 0 ? (this.delay - this.getElapsedTime()) : 0);
 		},
 
 		destroy: function () {
-			$(this.element).data("activityTimer", null);
+			$(this._element).data("activityTimer", null);
 			this.stop();
-			$(this.element).off(this.events, this.callbacks.onUserEvent);
-			this.element = null;
+
+			$(this._element).off(this.events, this.callbacks.onUserEvent);
+			this._element = null;
 		},
 
 		start: function () {
@@ -71,9 +74,9 @@
 			}
 			this.running = true;
 
-			this.time = time();
+			this._time = time();
 			if (this.paused) {
-				this.time -= this.elapsedTime;
+				this._time -= this._elapsedTime;
 				this.paused = false;
 			}
 
@@ -86,7 +89,7 @@
 				return;
 			}
 			this.running = false;
-			this.elapsedTime = this.getElapsedTime();
+			this._elapsedTime = this.getElapsedTime();
 
 			this.paused = true;
 			if (this.timerID) {
@@ -100,7 +103,7 @@
 				return;
 			}
 			this.running = false;
-			this.time = 0;
+			this._time = 0;
 
 			if (this.timerID) {
 				window.clearInterval(this.timerID);
@@ -111,16 +114,16 @@
 		onUserEvent: function (event) {
 			if (this.idle) {
 				this.idle = false;
-				$(this.element).trigger("activityTimer.active");
+				$(this._element).trigger("activityTimer.active");
 			}
-			this.time = time();
+			this._time = time();
 		},
 
 		onTimer: function () {
 			if (!this.idle && (this.getElapsedTime() >= this.delay)) {
 				this.idle = true;
-				this.time = 0;
-				$(this.element).trigger("activityTimer.idle");
+				this._time = 0;
+				$(this._element).trigger("activityTimer.idle");
 			}
 		}
 	});

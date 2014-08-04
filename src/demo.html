@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>jQuery idle timer | Demo</title>
+
+    </head>
+    <body>
+      <p>Demo</p>
+
+
+      <script src="../bower_components/jquery/dist/jquery.js"></script>
+      <script src="js/jquery.idle-timer.js"></script>
+      <script>
+        $.idleTimer({delay: 1000});
+        $(document).on("idleTimer.active", function () {
+          console.log("active");
+          $('p').css('color', 'red');
+        });
+
+        $(document).on("idleTimer.idle", function () {
+          console.log("inactive");
+          $('p').css('color', 'gray');
+        });
+      </script>
+    </body>
+</html>

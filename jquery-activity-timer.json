@@ -1,7 +1,7 @@
 {
   "name": "jquery-activity-timer",
   "title": "jQuery Acivity Timer Plugin",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "configurable plugin for user activity active/idle Events",
   "homepage": "https://github.com/furusystems/jquery-activity-timer",
   "author": {

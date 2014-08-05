@@ -118,7 +118,11 @@ module.exports = function (grunt) {
             "ascii_only": true
           },
           banner:
-            "/*! jQuery Activity Timer plugin <%= pkg.version %> */\n",
+            "/*!\n" +
+            " *jQuery Activity Timer plugin v<%= pkg.version %>\n" +
+            " *\n" +
+            " *Copyright 2014 Furusystems\n" +
+            " */",
           compress: {
             "hoist_funs": false,
             loops: false,
@@ -130,8 +134,11 @@ module.exports = function (grunt) {
 
     bump: {
       options: {
-        files: ['bower.json', 'package.json'],
-        commitFiles: ['bower.json', 'package.json'],
+        commit: false,
+        files:
+          ['bower.json', 'jquery-activity-timer.json', 'package.json'],
+        commitFiles:
+          ['bower.json', 'jquery-activity-timer.json', 'package.json'],
         pushTo: 'origin'
       }
     },

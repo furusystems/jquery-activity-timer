@@ -35,11 +35,12 @@
 
   });
   asyncTest("idle event triggered", function () {
-    expect(3);
+    expect(4);
 
     $(document).on("activityTimer.idle", function (event, activityTimer) {
       ok(true, "idle fires at document");
       ok(activityTimer.idle, "activityTimer is idle");
+      ok(!activityTimer.active, "activityTimer is not active");
 
       activityTimer.destroy();
       equal($(document).data("activityTimer"), null,
@@ -51,11 +52,12 @@
     $.activity(100);
   });
   asyncTest("active event triggered", function () {
-    expect(3);
+    expect(4);
     $(document).on("activityTimer.active", function (event, activityTimer) {
 
       ok(true, "active fires at document");
       ok(!activityTimer.idle, "activityTimer is not idle");
+      ok(activityTimer.active, "activityTimer is active");
 
       $.activity("destroy");
       equal($(document).data("activityTimer"), null,
@@ -72,7 +74,7 @@
 
   module("Element Tests");
   asyncTest("idle event triggered", function () {
-    expect(3);
+    expect(4);
 
     $("#qunit").on("activityTimer.idle",
       function (event, activityTimer) {
@@ -82,6 +84,7 @@
 
         ok(true, "idle fires at element");
         ok(activityTimer.idle, "activityTimer for element is idle");
+        ok(!activityTimer.active, "activityTimer for element is not active");
 
         activityTimer.destroy();
         equal($("#qunit").data("activityTimer"), null,
@@ -93,7 +96,7 @@
     $("#qunit").activity(100);
   });
   asyncTest("active event triggered", function () {
-    expect(3);
+    expect(4);
     $("#qunit").on("activityTimer.active",
       function (event, activityTimer) {
         if (event) {
@@ -102,6 +105,7 @@
 
         ok(true, "active fires at element");
         ok(!activityTimer.idle, "activityTimer for element is not idle");
+        ok(activityTimer.active, "activityTimer for element is active");
 
         $.activity("destroy");
         equal($("#qunit").data("activityTimer"), null,
@@ -146,12 +150,12 @@
           event.stopPropagation(); // stop propagation for document tests
         }
 
-        ok(!activityTimer.idle && !activityTimer.paused,
+        ok(activityTimer.active && !activityTimer.paused,
           "activityTimer should be active and not paused");
 
         activityTimer.stop();
         setTimeout(function () {
-          ok(!activityTimer.idle && !activityTimer.running,
+          ok(activityTimer.active && !activityTimer.running,
             "activityTimer should be active and not running");
           start();
         }, 100);

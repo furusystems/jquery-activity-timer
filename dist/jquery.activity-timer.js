@@ -43,6 +43,7 @@
 		this._time = 0;
 
 		this.delay = delay;
+		this.active = true;
 		this.idle = false;
 		this.running = false;
 		this.paused = false;
@@ -151,6 +152,7 @@
 		onUserEvent: function (event) {
 			if (this.idle) {
 				this.idle = false;
+				this.active = true;
 				$(this._element).trigger("activityTimer.active", this);
 			}
 			this._time = time();
@@ -164,6 +166,7 @@
 		onTimer: function () {
 			if (!this.idle && (this.getElapsedTime() >= this.delay)) {
 				this.idle = true;
+				this.active = false;
 				this._time = 0;
 				$(this._element).trigger("activityTimer.idle", this);
 			}
@@ -227,6 +230,4 @@
 	$.activity = function () {
 		$.fn.activity.apply([document], arguments);
 	};
-
-	return $.fn.activity;
 }));

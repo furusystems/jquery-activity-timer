@@ -1,6 +1,6 @@
 {
   "name": "jquery-activity-timer",
-  "title": "jQuery Acivity Timer Plugin",
+  "title": "jQuery Activity Timer Plugin",
   "version": "0.0.6",
   "description": "configurable plugin for user activity active/idle Events",
   "main": "dist/jquery.activity-timer.js",

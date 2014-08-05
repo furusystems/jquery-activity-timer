@@ -15,7 +15,7 @@
   "licenses": [
     {
       "type": "MIT",
-      "url": "furusystems/jquery-activity-timer/blob/master/LICENSE-MIT"
+      "url": "https://github.com/furusystems/jquery-activity-timer/blob/master/LICENSE"
     }
   ],
   "dependencies": {

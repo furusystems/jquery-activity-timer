@@ -1,16 +1,16 @@
 jQuery Activity Timer Plugin
 ============================
 
-![Build Status](https://travis-ci.org/thorst/jquery-idletimer.svg?branch=master)](https://travis-ci.org/furusystems/jquery-activity-timer)
-
+![Build Status](https://travis-ci.org/furusystems/jquery-activity-timer.svg?branch=master)
 
 ## About
 
 This is Plugin is inspired and influenced by the "[jQuery Idle Timer Plugin](http://github.com/thorst/jquery-idletimer)".
 however it takes a different approach in the implementation of a solution for the problem.
  
-The original solution uses a an approach where all the methods and properties on the _idle timer plugin_ is accessed through the `$.fn.idleTimer` plugin function see [usage](https://github.com/thorst/jquery-idletimer#usage). While the _activity timer plugin_ only uses the `$.fn.activity` function to setup or destroy the activity timer(s), and still allow to chain functions after calling the `$.fn.activity` function. 
-  It also exposes an `ActivityTimer` object available trough `$(element).data('activityTimer')` for the `element` that `$(element).activity(props)` was called with. This `activityTimer` object is where the main difference lies since one would use this object to `pause/stop/start` the timer or access the properties such as `elapsedTime`, `remainingTime`.
+The original solution uses a an approach where all the methods and properties on the _idle timer plugin_ is accessed through the `$.fn.idleTimer` plugin function see [usage](https://github.com/thorst/jquery-idletimer#usage). While _activity timer plugin_ only uses the `$.fn.activity` function to setup or destroy the activity timer(s), and still allow to chain functions after calling the `$.fn.activity` function. 
+
+The _activity timer plugin_  also exposes an `ActivityTimer` object available trough `$(element).data('activityTimer')` for the `element` that `$(element).activity(props)` was called with. This `activityTimer` object is where the main difference lies since one would use this object to `pause/stop/start` the timer or access the properties such as `elapsedTime`, `remainingTime`.
 
 
 If you want to use this more experimental implementation you are welcome, otherwise i would recommend to stick with the [jQuery Idle Timer Plugin](http://github.com/thorst/jquery-idletimer)", which is the original implementation and more maintained.

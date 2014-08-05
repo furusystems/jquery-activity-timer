@@ -1,0 +1,25 @@
+{
+  "name": "jquery-activity-timer",
+  "title": "jQuery Acivity Timer Plugin",
+  "version": "0.0.4",
+  "description": "configurable plugin for user activity active/idle Events",
+  "homepage": "https://github.com/furusystems/jquery-activity-timer",
+  "author": {
+    "name": "Cristobal Dabed",
+    "email": "cristobal@dabed.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/furusystems/jquery-activity-timer.git"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "furusystems/jquery-activity-timer/blob/master/LICENSE-MIT"
+    }
+  ],
+  "dependencies": {
+    "jquery": "1.11.1"
+  },
+  "keywords": []
+}

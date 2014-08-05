@@ -1,8 +1,7 @@
 jQuery Activity Timer Plugin
 ============================
 
-![Build Status](https://travis-ci.org/thorst/jquery-idletimer.svg?branch=master)](https://travis-ci.org/furusystems/jquery-activity-timer)
-
+![Build Status](https://travis-ci.org/furusystems/jquery-activity-timer.svg?branch=master)
 
 ## About
 

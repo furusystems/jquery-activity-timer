@@ -136,9 +136,9 @@ module.exports = function (grunt) {
       options: {
         commit: false,
         files:
-          ['bower.json', 'jquery-activity-timer.json', 'package.json'],
+          ['bower.json', 'jquery-activity-timer.jquery.json', 'package.json'],
         commitFiles:
-          ['bower.json', 'jquery-activity-timer.json', 'package.json'],
+          ['bower.json', 'jquery-activity-timer.jquery.json', 'package.json'],
         pushTo: 'origin'
       }
     },

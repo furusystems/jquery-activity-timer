@@ -175,7 +175,7 @@
 			if (this.idle) {
 				this.idle = false;
 				this.active = true;
-				$(this._element).trigger("activityTimer.active", this);
+				$(this._element).trigger("activity.active", this);
 			}
 			this._time = time();
 		},
@@ -190,7 +190,7 @@
 				this.idle = true;
 				this.active = false;
 				this._time = 0;
-				$(this._element).trigger("activityTimer.idle", this);
+				$(this._element).trigger("activity.idle", this);
 			}
 		}
 	});

@@ -107,18 +107,18 @@ $('.box')
       <script src="js/jquery.activity-timer.js"></script>
       <script>
         $.activity({delay: 5000});
-        $(document).on("activityTimer.active", function (event) {
+        $(document).on("activity.active", function (event) {
           $('body').removeClass('idle');
           $('h2 span').html('active');
         });
 
-        $(document).on("activityTimer.idle", function (event) {
+        $(document).on("activity.idle", function (event) {
           $('body').addClass('idle');
           $('h2 span').html('idle');
         });
 
         $('.box').activity({delay: 2500});
-        $('.box').on("activityTimer.active", function (event) {
+        $('.box').on("activity.active", function (event) {
           // prevent propagation to document, body and parents
           if (event) {
             event.stopPropagation();
@@ -127,7 +127,7 @@ $('.box')
           $('.box h4 span').html('active');
         });
 
-        $('.box').on("activityTimer.idle", function (event) {
+        $('.box').on("activity.idle", function (event) {
           // prevent propagation to document, body and parents
           if (event) {
             event.stopPropagation();

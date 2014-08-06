@@ -7,8 +7,8 @@ jQuery Activity Timer Plugin
 
 This is Plugin is inspired and influenced by the "[jQuery Idle Timer Plugin](http://github.com/thorst/jquery-idletimer)".
 however it takes a different approach in the implementation of a solution for the problem.
- 
-The original solution uses a an approach where all the methods and properties on the _idle timer plugin_ is accessed through the `$.fn.idleTimer` plugin function see [usage](https://github.com/thorst/jquery-idletimer#usage). While _activity timer plugin_ only uses the `$.fn.activity` function to setup or destroy the activity timer(s), and still allow to chain functions after calling the `$.fn.activity` function. 
+
+The original solution uses a an approach where all the methods and properties on the _idle timer plugin_ is accessed through the `$.fn.idleTimer` plugin function see [usage](https://github.com/thorst/jquery-idletimer#usage). While _activity timer plugin_ only uses the `$.fn.activity` function to setup or destroy the activity timer(s), and still allow to chain functions after calling the `$.fn.activity` function.
 
 The _activity timer plugin_  also exposes an `ActivityTimer` object available trough `$(element).data('activityTimer')` for the `element` that `$(element).activity(props)` was called with. This `activityTimer` object is where the main difference lies since one would use this object to `pause/stop/start` the timer or access the properties such as `elapsedTime`, `remainingTime`.
 
@@ -32,7 +32,7 @@ The API describes the ActivityTimer type and the jQuery plugin interface
 
 
 #### Setup activity for either an element or selector.
-	
+
 	1. $(element|selector).activity()         // use default options
 	2. $(element|selector).activity(delay),   // specify timeout delay
 	3. $(element|selector).activity(delay,    // specify timeout delay and options
@@ -44,12 +44,12 @@ The following options can be specified:
 	{
 		// starts a timeout as soon as the timer is set up
 		startImmediately: true,
-		
+
 		// the amount of time (ms) before the user is considered idle
 		delay: 5000,
-		
+
 		 // activity is one of these events
-		events: 'keydown DOMMouseScroll mousewheel ' + 
+		events: 'keydown DOMMouseScroll mousewheel ' +
 		        'mousemove mousedown touchstart touchmove' +
 		        'MSPointerDown MSPointerMove'
 	}
@@ -58,21 +58,21 @@ The values specified are the default values.
 
 
 #### Bind to the activity events
-	
+
 	// listen to the activity idle event
-	$(element|selector).on('activity.idle, function (event, activityTimer) { 
+	$(element|selector).on('activity.idle, function (event, activityTimer) {
 		console.log("element has gone idle", activityTimer.idle);
 	});
-	
+
 	// listen to the activity active event
-	$(element|selector).on('activity.active, function (event, activityTimer) { 
+	$(element|selector).on('activity.active, function (event, activityTimer) {
 		console.log("element is active again", activityTimer.active);
-	});	
-	
+	});
+
 The event parameter is an instance of jQuery.Event.
 While the activityTimer parameter is an instance of ActivityTimer.
 
-*NOTE:* _if you bind an listener to both the document and another element at the same time, 
+*NOTE:* _if you bind an listener to both the document and another element at the same time,
 make sure to stop propagation of the event. The same is true if you are adding activity timer to elements that already have parent element that has an activity timer_ i.e.
 
 	$(document).activity()
@@ -81,21 +81,21 @@ make sure to stop propagation of the event. The same is true if you are adding a
 	$(document).on("activity.idle", function (event, activityTimer) {
 		// ...
 	});
-		
+
 	$("#id").on("activity.idle", function (event, activityTimer) {
 		if (event) {
 			event.stopPropagation(); // otherwise it would bubble up to the document listener above.
 		}
 	});
-	
+
 
 #### Access the activityTimer object
 
 	$(element|selector).data("activityTimer")
-	
+
 #### Destroy the activity timer.
 
-	$(element|selector).activity("destroy") 
+	$(element|selector).activity("destroy")
 	$(element|selector).data("activityTimer").destroy()
 
 Will stop and destroy the activity time for the given element and/or selector if there is an activityTimer assigned to it.
@@ -107,7 +107,7 @@ Will stop and destroy the activity time for the given element and/or selector if
 	$.activity(delay, options)
 	$.activity(options)
 	$.activity("destroy")
-	
+
 The `$.activity` function automatically wraps and call `$.fn.activity` function with the given arguments.
 
 
@@ -128,28 +128,22 @@ This ActivityTimer Prototype is not directly available through the window, but o
 
 
 #### Methods
-	
+
 	start():Void   - Will start the timer unless it already is already running.
-	pause():Void   - Will pause the timer, and store the remainingTime for when the timer resumes. 
+	pause():Void   - Will pause the timer, and store the remainingTime for when the timer resumes.
 	                 Use the start method to resume an paused timer.
 	stop():Void    - Will stop the timer.
 	                 Use the start method to start an stopped timer.
-	                 	                             
+
 	destroy():Void - Will stop and destroy and remove all references the object is holding onto making it available for gc.
 	                 Trying to use an activityTimer where the `destroy` method has been called will result into errors.
-	
+
 	getElapsedTime():Number   - Returns the time in ms since the last activity
-	getRemainingTime():Number - Returns the time before the next idle event is to be triggered, 
+	getRemainingTime():Number - Returns the time before the next idle event is to be triggered,
 	                            unless there is activity which will reset the remainingTime.
-	                            
+
 ## Changelog
 
+* `v 0.0.8` - Events renamed to match Documentation.
 * `v 0.0.5` - Documentation; `activityTimer.active` property.
 * `v 0.0.4` - Initial Release
-
-	                 
-
-
-
-
-

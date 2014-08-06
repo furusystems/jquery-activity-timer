@@ -37,7 +37,7 @@
   asyncTest("idle event triggered", function () {
     expect(4);
 
-    $(document).on("activityTimer.idle", function (event, activityTimer) {
+    $(document).on("activity.idle", function (event, activityTimer) {
       ok(true, "idle fires at document");
       ok(activityTimer.idle, "activityTimer is idle");
       ok(!activityTimer.active, "activityTimer is not active");
@@ -53,7 +53,7 @@
   });
   asyncTest("active event triggered", function () {
     expect(4);
-    $(document).on("activityTimer.active", function (event, activityTimer) {
+    $(document).on("activity.active", function (event, activityTimer) {
 
       ok(true, "active fires at document");
       ok(!activityTimer.idle, "activityTimer is not idle");
@@ -76,7 +76,7 @@
   asyncTest("idle event triggered", function () {
     expect(4);
 
-    $("#qunit").on("activityTimer.idle",
+    $("#qunit").on("activity.idle",
       function (event, activityTimer) {
         if (event) {
           event.stopPropagation(); // stop propagation for document tests
@@ -97,7 +97,7 @@
   });
   asyncTest("active event triggered", function () {
     expect(4);
-    $("#qunit").on("activityTimer.active",
+    $("#qunit").on("activity.active",
       function (event, activityTimer) {
         if (event) {
           event.stopPropagation(); // stop propagation for document tests
@@ -130,7 +130,7 @@
     activityTimer.start();
     ok(activityTimer.running, "activityTimer should be running");
 
-    $("#qunit-fixture").on("activityTimer.idle",
+    $("#qunit-fixture").on("activity.idle",
       function (event, activityTimer) {
         if (event) {
           event.stopPropagation(); // stop propagation for document tests
@@ -144,7 +144,7 @@
           $("#qunit-fixture").trigger("keydown");
         });
       });
-    $("#qunit-fixture").on("activityTimer.active",
+    $("#qunit-fixture").on("activity.active",
       function (event, activityTimer) {
         if (event) {
           event.stopPropagation(); // stop propagation for document tests

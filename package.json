@@ -1,7 +1,7 @@
 {
   "name": "jquery-activity-timer",
   "title": "jQuery Activity Timer Plugin",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "configurable plugin for user activity active/idle Events",
   "dependencies": {},
   "devDependencies": {

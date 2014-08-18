@@ -61,10 +61,10 @@ module.exports = function (grunt) {
 
     jshint: {
       source: [
-        '<%= properties.source_dir %>'
+        '<%= properties.source_dir %>/js/*.js'
       ],
       test: [
-        '<%= properties.test_dir %>'
+        '<%= properties.test_dir %>/*.js'
       ],
       options: {
         jshintrc: '.jshintrc'
